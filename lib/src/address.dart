@@ -4,15 +4,15 @@ class Address {
   final double latitude;
   final double longitude;
   final List<String> adressLines;
-  final String thoroughfare;
-  final String subThoroughfare;
-  final String locality;
-  final String subLocality;
-  final String adminArea;
-  final String subAdminArea;
-  final String country;
-  final String countryCode;
-  final String postalCode;
+  final String? thoroughfare;
+  final String? subThoroughfare;
+  final String? locality;
+  final String? subLocality;
+  final String? adminArea;
+  final String? subAdminArea;
+  final String? country;
+  final String? countryCode;
+  final String? postalCode;
   const Address({
     this.latitude = 0.0,
     this.longitude = 0.0,
@@ -21,16 +21,14 @@ class Address {
     this.subThoroughfare,
     this.locality,
     this.subLocality,
-    this.adminArea = '',
-    this.subAdminArea = '',
+    this.adminArea,
+    this.subAdminArea,
     this.country,
     this.countryCode,
     this.postalCode,
   });
 
   factory Address.fromMap(dynamic map) {
-    if (map == null) return null;
-
     return Address(
       latitude: map['latitude'] ?? 0.0,
       longitude: map['longitude'] ?? 0.0,

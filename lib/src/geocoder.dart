@@ -13,7 +13,7 @@ abstract class NativeGeocoder {
     double latitude,
     double longitude, {
     int maxResults = 5,
-    String locale,
+    String? locale,
   });
 }
 
@@ -24,27 +24,27 @@ class _NativeGeocoderImpl implements NativeGeocoder {
 
   static const channel = MethodChannel('native_geocoder');
 
-  Completer<List<Address>> _completer;
+  Completer<List<Address>>? _completer;
 
   @override
-  Future<bool> get isPresent => channel.invokeMethod('is_present');
+  Future<bool> get isPresent async => (await channel.invokeMethod('is_present')) ?? false;
 
   @override
   Future<List<Address>> getAddresses(
     double latitude,
     double longitude, {
     int maxResults = 5,
-    String locale,
+    String? locale,
   }) async {
     _completer?.complete(<Address>[]);
     _completer = Completer();
 
-    final List r = await channel.invokeMethod('get_addresses', {
+    final List r = await (channel.invokeMethod('get_addresses', {
       'latitude': latitude,
       'longtiude': longitude,
       'maxResults': maxResults,
       'locale': locale,
-    });
+    }) as FutureOr<List<dynamic>>);
 
     return r.map((addr) => Address.fromMap(addr)).toList();
   }
@@ -52,9 +52,8 @@ class _NativeGeocoderImpl implements NativeGeocoder {
   Future<void> onMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'on_addresses':
-        print(call.arguments);
         final result = call.arguments.map((addr) => Address.fromMap(addr)).toList();
-        _completer.complete(result);
+        _completer!.complete(result);
         break;
     }
   }
